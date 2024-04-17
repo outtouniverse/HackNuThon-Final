@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const collection=require('../models/config');
 const Project=require('../models/user');
-const upload = require('../config/multer');
+const path=require('path');
+const multer = require('multer');
 const Asset = require('../models/obj');
 const Member = require('../models/member');
 const app = express();
@@ -103,19 +104,19 @@ app.post("/assign", async (req, res) => {
 app.get('/members',(req,res)=>{
   res.render('member');
 });
+
 app.post('/members', async (req, res) => {
   try {
     const { numOfRepetitions } = req.body;
     const savedMembers = [];
-    console.log(numOfRepetitions);
 
     // Loop through each member submitted in the form
     for (let i = 0; i < numOfRepetitions; i++) {
-      const memberName = req.body[`memberName${i}`];
-      const memberPosition = req.body[`memberPosition${i}`];
-      const taskToAssign = req.body[`taskToAssign${i}`];
-      const startDate = req.body[`startDate${i}`];
-      const endDate = req.body[`endDate${i}`];
+      const memberName = req.body[`project_title_${i}`];
+      const memberPosition = req.body[`project_description_${i}`];
+      const taskToAssign = req.body[`task_to_assign_${i}`];
+      const startDate = req.body[`start_date_${i}`];
+      const endDate = req.body[`end_date_${i}`];
 
       // Create a new member document
       const newMember = new Member({
@@ -128,9 +129,8 @@ app.post('/members', async (req, res) => {
 
       // Save the member document to the database
       const savedMember = await newMember.save();
-
-      console.log('Member saved:', savedMember);
       savedMembers.push(savedMember);
+      console.log('Member saved:', savedMember);
     }
 
     // Send a response after all members have been saved
@@ -142,29 +142,43 @@ app.post('/members', async (req, res) => {
   }
 });
 
-
-app.get("/assets", (req, res) => {
-  res.render("assets");
-});
-app.post('/assets', upload.single('filename'), async (req, res) => {
-  try {
-    const { filename, path } = req.file;
-
-    // Create a new asset document
-    const newAsset = new Asset({
-      filename,
-      path
-    });
-
-    // Save the asset document to the database
-    await newAsset.save();
-
-    res.status(200).json({ message: 'File uploaded successfully', asset: newAsset });
-  } catch (err) {
-    console.error('Error uploading file:', err);
-    res.status(500).json({ error: 'Failed to upload file', details: err.message });
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   }
 });
+
+const upload = multer({
+  storage: storage
+});
+app.get("/assets", async (req, res) => {
+  try {
+    const assets = await Asset.find(); // Corrected from 'asset' to 'Asset'
+    res.render("assets", { assets });
+  } catch (error) {
+    console.error("Error fetching assets:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.post('/assets', upload.single('filename'), async (req, res) => {
+  try {
+      const { filename, path, size } = req.file;
+      const asset = new Asset({
+          filename,
+          path,
+          size
+      });
+      await asset.save();
+      res.send('Asset uploaded successfully');
+  } catch (error) {
+      res.status(400).send('Error uploading asset');
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

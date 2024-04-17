@@ -27,9 +27,7 @@ const memberSchema = new mongoose.Schema({
     type: Date,
     required: true
   }
-}, {
-  collection: 'members' 
-});
+},{ collection: 'members' });
 const Member = mongoose.model('members',memberSchema );
 module.exports = Member;
 

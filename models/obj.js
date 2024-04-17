@@ -8,11 +8,11 @@ connect.then(()=>{
     console.log("couldnt connect");
 })
 const assetSchema = new mongoose.Schema({
-  filename: String,
-  path: String,
-  uploadDate: { type: Date, default: Date.now }
+    filename: String,
+    path: String,
+    size: Number,
+    // Add more fields as needed
 });
 
-const Asset = mongoose.model('Asset', assetSchema);
+module.exports = mongoose.model('Asset', assetSchema);
 
-module.exports = Asset;
