@@ -1,22 +1,14 @@
-<<<<<<< HEAD
 const express = require('express');
 const bodyParser = require('body-parser');
 const collection=require('../models/config');
 const Project=require('../models/user');
+const upload = require('../config/multer');
+const Asset = require('../models/obj');
 const Member = require('../models/member');
 const app = express();
 
-app.use(express.static('public'));
-app.set('view engine','ejs');
-=======
-const express = require("express");
-const bodyParser = require("body-parser");
-const collection = require("../models/config");
-const Project = require("../models/user");
-const app = express();
 app.use(express.static("public"));
 app.set("view engine", "ejs");
->>>>>>> 2438f67d23d7dab58909378f2645653728445ada
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
@@ -54,56 +46,35 @@ app.post("/", async (req, res) => {
 
 app.get("/login", (req, res) => {
   res.render("login");
-});
-app.post("/login", async (req, res) => {
+});app.post("/login", async (req, res) => {
   try {
-    const check = await collection.findOne({ email: req.body.email });
-    if (!check) {
-      res.send("email not found");
+    const user = await collection.findOne({ email: req.body.email });
+    if (!user) {
+      return res.send("Email not found");
     }
-<<<<<<< HEAD
-    const ispassword=await collection.findOne({password:req.body.password});
-    if(ispassword){
-      res.redirect("/dash/" + user._id);
-    }else{
-=======
-    const ispassword = await collection.findOne({
-      password: req.body.password,
-    });
-    if (ispassword) {
+    // Check if the password matches the one stored in the database
+    if (req.body.password === user.password) {
+      // Password matches, redirect to the dashboard
       res.redirect("/dash");
     } else {
->>>>>>> 2438f67d23d7dab58909378f2645653728445ada
-      req.send("wrong password");
+      // Password does not match
+      res.send("Wrong password");
     }
-  } catch {
-    req.send("wrong details");
-  }
-});
-app.get('/dash/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
-    const user = await collection.findById(id);
-
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
-
-    res.render('home', { username: user.username });
   } catch (error) {
-    console.error('Error fetching user data:', error);
-    res.status(500).send('Internal Server Error');
+    // Handle any unexpected errors
+    console.error("Error during login:", error);
+    res.send("An error occurred during login");
   }
 });
 
-<<<<<<< HEAD
+
 app.get('/assign',async (req,res)=>{
   const projects = await Project.find();
-  res.render('assign', { projects });
-=======
+  res.render('assign', { projects})
+});
+;
 app.get("/dash", (req, res) => {
   res.render("home");
->>>>>>> 2438f67d23d7dab58909378f2645653728445ada
 });
 app.get("/assign", async (req, res) => {
   const projects = await Project.find();
@@ -129,16 +100,22 @@ app.post("/assign", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-<<<<<<< HEAD
 app.get('/members',(req,res)=>{
   res.render('member');
-});app.post('/members', async (req, res) => {
+});
+app.post('/members', async (req, res) => {
   try {
     const { numOfRepetitions } = req.body;
+    const savedMembers = [];
+    console.log(numOfRepetitions);
 
     // Loop through each member submitted in the form
     for (let i = 0; i < numOfRepetitions; i++) {
-      const { memberName, memberPosition, taskToAssign, startDate, endDate } = req.body;
+      const memberName = req.body[`memberName${i}`];
+      const memberPosition = req.body[`memberPosition${i}`];
+      const taskToAssign = req.body[`taskToAssign${i}`];
+      const startDate = req.body[`startDate${i}`];
+      const endDate = req.body[`endDate${i}`];
 
       // Create a new member document
       const newMember = new Member({
@@ -150,29 +127,44 @@ app.get('/members',(req,res)=>{
       });
 
       // Save the member document to the database
-      await newMember.save();
+      const savedMember = await newMember.save();
 
-      console.log(newMember);
+      console.log('Member saved:', savedMember);
+      savedMembers.push(savedMember);
     }
 
-    // Redirect to a success page after saving all members
-    res.redirect("/members");
+    // Send a response after all members have been saved
+    res.status(200).json({ message: 'Members saved successfully', members: savedMembers });
   } catch (err) {
     console.error('Error saving member data:', err);
-    res.status(500).json({ error: 'Failed to save member data to database' });
+    // Send a JSON response with the error message
+    res.status(500).json({ error: 'Failed to save member data to database', details: err.message });
   }
 });
 
 
-=======
-app.get("/members", (req, res) => {
-  res.render("member");
-});
-
 app.get("/assets", (req, res) => {
   res.render("assets");
 });
->>>>>>> 2438f67d23d7dab58909378f2645653728445ada
+app.post('/assets', upload.single('filename'), async (req, res) => {
+  try {
+    const { filename, path } = req.file;
+
+    // Create a new asset document
+    const newAsset = new Asset({
+      filename,
+      path
+    });
+
+    // Save the asset document to the database
+    await newAsset.save();
+
+    res.status(200).json({ message: 'File uploaded successfully', asset: newAsset });
+  } catch (err) {
+    console.error('Error uploading file:', err);
+    res.status(500).json({ error: 'Failed to upload file', details: err.message });
+  }
+});
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
