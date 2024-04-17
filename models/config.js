@@ -7,10 +7,14 @@ connect.then(()=>{
     console.log("couldnt connect");
 })
 const loginschema=new mongoose.Schema({
-    email:{
+    username:{
+        type:String,
+        required:true
+    },email:{
         type:String,
         required:true
     },
+    
     password:{
         type:String,
         required:true
