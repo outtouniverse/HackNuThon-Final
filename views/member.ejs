@@ -41,7 +41,7 @@
             </a>
           </li>
 
-          <li>
+          <li class="active">
             <a href="/members">
               <span class="icon">
                 <ion-icon name="people-outline"></ion-icon>
@@ -79,28 +79,123 @@
         </ul>
       </div>
 
-
       <!-- ========================= Main ==================== -->
       <div class="main">
-        <div class="topbar">
-          <div class="toggle">
+      <div
+          class="topbar flex items-center justify-between px-4 py-3 text-black"
+        >
+          <div
+            class="toggle text-2xl text-gray-400 hover:text-black focus:outline-none"
+          >
             <ion-icon name="menu-outline"></ion-icon>
           </div>
-
-          <div class="search">
-            <label>
-              <input type="text" placeholder="Search here" />
-              <ion-icon name="search-outline"></ion-icon>
-            </label>
+          <div class="pt-2 relative mx-auto text-gray-600">
+            <input
+              class="border-2 border-gray-300 bg-white h-10 px-5 pr-72 rounded-full text-sm focus:outline-none"
+              type="search"
+              name="search"
+              placeholder="Search"
+            />
+            <button type="submit" class="absolute right-0 top-0 mt-5 mr-4">
+              <svg
+                class="text-gray-600 h-4 w-4 fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                version="1.1"
+                id="Capa_1"
+                x="0px"
+                y="0px"
+                viewBox="0 0 56.966 56.966"
+                style="enable-background: new 0 0 56.966 56.966"
+                xml:space="preserve"
+                width="512px"
+                height="512px"
+              >
+                <path
+                  d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z"
+                />
+              </svg>
+            </button>
           </div>
 
-          <div class="user">
-            <img src="/images/customer01.jpg" alt="" />
+          <div class="user-actions flex items-center">
+            <button
+              class="mr-4 text-gray-400 hover:text-black focus:outline-none"
+              title="Notifications"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                />
+              </svg>
+            </button>
+            <div class="user relative">
+              <img
+                src="/images/customer01.jpg"
+                alt="User Avatar"
+                class="w-10 h-10 rounded-full cursor-pointer"
+              />
+              <div
+                class="user-menu absolute right-0 mt-2 w-48 bg-black rounded-md shadow-lg py-2 hidden"
+              >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  title="Profile"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 inline-block mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  Profile
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  title="Logout"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 inline-block mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    />
+                  </svg>
+                  Logout
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
         <div
-          class="container p-4 py-20 flex items-center justify-center gap-20 w-full h-fit"
+          class="px-20 py-5 flex items-center justify-center gap-20 w-full h-fit"
         >
           <form id="dynamicForm" class="w-screen mx-auto py-10">
             <h1
@@ -108,32 +203,33 @@
             >
               Team
               <span
-                class="underline underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600"
+                class="underline underline-offset-3 decoration-8 decoration-[#00377e] dark:decoration-[#00377e]"
                 >Member</span
               >
             </h1>
 
-            <div class="relative z-0 w-40 mx-auto mb-5 group">
+            <div class="relative z-0 mx-auto mb-5 group">
               <input
                 type="number"
                 id="numOfRepetitions"
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer text-black"
+                class="block py-3 px-4 w-full text-lg text-gray-800 bg-white border-2 border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 placeholder=" "
                 required
                 min="1"
               />
               <label
                 for="numOfRepetitions"
-                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 text-20"
-                >Number of Members</label
+                class="absolute left-4 -top-3.5 text-gray-600 bg-white px-2 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-lg peer-placeholder-shown:text-gray-400 peer-focus:top--3.5 peer-focus:text-sm peer-focus:text-blue-600"
               >
+                Number of Members
+              </label>
             </div>
 
             <div id="dynamicFields" class="h-full"></div>
 
             <button
               type="submit"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium text-base rounded-lg shadow-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               Submit
             </button>
@@ -164,62 +260,96 @@
             );
 
             dynamicFieldSet.innerHTML = `
-              <form class="flex items-center justify-center gap-10" action='/members' method='post'>
-                <div class="relative z-0 w-full mb-5 group">
-                <input type="text" name="project_title_${i}" 
-                id="project_title_${i}" 
-                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer dark:text-black" placeholder=" " required />
-                <label for="project_title_${i}" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Member Name ${
-              i + 1
-            }</label>
-              </div>
-              <div class="relative z-0 w-full mb-5 group">
-                <input type="text" name="project_description_${i}"  id="project_description_${i}" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                <label for="project_description_${i}" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Member Postion</label>
-              </div>
-              <div class="relative z-0 w-full mb-5 group">
-                <input type="text" name="project_description_${i}" id="project_description_${i}"class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                <label for="project_description_${i}" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Task to assign</label>
-              </div>
-              <div class="relative z-0 w-full mb-5 group">
-                <input
-                  type="date"
-                  name="start_date_${i}"
-                  id="start_date_${i}"
-                  class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer text-black"
-                  placeholder=" "
-                  required
-                />
-                <label
-                  for="start_date_${i}"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >Start Date</label
-                >
-                </div>
-                <div class="relative z-0 w-full mb-5 group">
-                <input
-                  type="date"
-                  name="end_date_${i}"
-                  id="end_date_${i}"
-                  class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer text-black"
-                  placeholder=" "
-                  required
-                />
-                <label
-                  for="end_date_${i}"
-                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >End Date</label
-                >
-                </div>
-                  <button
-              type="submit"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Submit
-            </button>  
-              </form>
-            `;
-
+  <form class="flex items-center justify-center flex-wrap gap-10 m-2" action='/members' method='post'>
+    <div class="relative z-0 w-full mb-5 group">
+      <input
+        type="text"
+        name="project_title_${i}"
+        id="project_title_${i}"
+        class="block py-3 px-4 w-full flex-shrink-0 text-lg text-gray-800 bg-white border-2 border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent dark:text-black"
+        placeholder=" "
+        required
+      />
+      <label
+        for="project_title_${i}"
+        class="absolute left-4 -top-3.5 text-gray-600 bg-white px-2 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-lg peer-placeholder-shown:text-gray-400 peer-focus:top--3.5 peer-focus:text-sm peer-focus:text-blue-600 text-xs"
+      >
+        Member Name ${i + 1}
+      </label>
+    </div>
+    <div class="relative z-0 w-full mb-5 group">
+      <input
+        type="text"
+        name="project_description_${i}"
+        id="project_description_${i}"
+        class="block py-3 px-4 w-full text-lg text-gray-800 bg-white border-2 border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+        placeholder=" "
+        required
+      />
+      <label
+        for="project_description_${i}"
+        class="absolute left-4 -top-3.5 text-gray-600 bg-white px-2 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-lg peer-placeholder-shown:text-gray-400 peer-focus:top--3.5 peer-focus:text-sm peer-focus:text-blue-600"
+      >
+        Member Position
+      </label>
+    </div>
+    <div class="relative z-0 w-full mb-5 group">
+      <input
+        type="text"
+        name="project_description_${i}"
+        id="project_description_${i}"
+        class="block py-3 px-4 w-full text-lg text-gray-800 bg-white border-2 border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+        placeholder=" "
+        required
+      />
+      <label
+        for="project_description_${i}"
+        class="absolute left-4 -top-3.5 text-gray-600 bg-white px-2 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-lg peer-placeholder-shown:text-gray-400 peer-focus:top--3.5 peer-focus:text-sm peer-focus:text-blue-600"
+      >
+        Task to assign
+      </label>
+    </div>
+    <div class="relative z-0 w-full mb-5 group">
+      <input
+        type="date"
+        name="start_date_${i}"
+        id="start_date_${i}"
+        class="block py-3 px-4 w-full text-lg text-gray-800 bg-white border-2 border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+        placeholder=" "
+        required
+      />
+      <label
+        for="start_date_${i}"
+        class="absolute left-4 -top-3.5 text-gray-600 bg-white px-2 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-lg peer-placeholder-shown:text-gray-400 peer-focus:top--3.5 peer-focus:text-sm peer-focus:text-blue-600"
+      >
+        Start Date
+      </label>
+    </div>
+    <div class="relative z-0 w-full mb-5 group">
+      <input
+        type="date"
+        name="end_date_${i}"
+        id="end_date_${i}"
+        class="block py-3 px-4 w-full text-lg text-gray-800 bg-white border-2 border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+        placeholder=" "
+        required
+      />
+      <label
+        for="end_date_${i}"
+        class="absolute left-4 -top-3.5 text-gray-600 bg-white px-2 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-lg peer-placeholder-shown:text-gray-400 peer-focus:top--3.5 peer-focus:text-sm peer-focus:text-blue-600"
+      >
+        End Date
+      </label>
+      <p>Please submit all button :) lol</p>
+    </div>
+    <button
+      type="submit"
+      class="py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium text-base rounded-lg shadow-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+    >
+      Submit
+    </button>
+  </form>
+`;
             dynamicFieldsContainer.appendChild(dynamicFieldSet);
           }
         });
