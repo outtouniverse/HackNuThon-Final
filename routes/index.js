@@ -19,7 +19,6 @@ app.post("/", async (req, res) => {
   try {
     const { username, email, password, confirmpassword } = req.body;
 
-    // Check if user with the provided email already exists
     const existUser = await collection.findOne({ email });
 
     if (existUser) {
@@ -38,7 +37,8 @@ app.post("/", async (req, res) => {
       password,
     });
     await newUser.save();
-    res.redirect("/dash");
+    const user = await collection.findOne({ email: req.body.email });
+    res.redirect("/dash/"+user._id);
   } catch (err) {
     console.error("Error saving user:", err);
     res.status(500).json({ error: "Failed to save user to database" });
@@ -52,12 +52,13 @@ app.post("/login", async (req, res) => {
   try {
     const user = await collection.findOne({ email: req.body.email });
     if (!user) {
+      
       return res.send("Email not found");
     }
     // Check if the password matches the one stored in the database
     if (req.body.password === user.password) {
       // Password matches, redirect to the dashboard
-      res.redirect("/dash");
+      res.redirect("/dash/"+user._id);
     } else {
       // Password does not match
       res.send("Wrong password");
@@ -75,6 +76,20 @@ app.get("/assign", async (req, res) => {
 });
 app.get("/dash", (req, res) => {
   res.render("home");
+;
+app.get("/dash/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = await collection.findById(id);
+    if (!user) {
+      return res.send("User not found");
+    }
+    const username = user.username; // Assuming the username is stored in the user object
+    res.render("home", { username });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 app.get("/assign", async (req, res) => {
   const projects = await Project.find();
