@@ -1,11 +1,11 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const collection=require('../models/config');
-const Project=require('../models/user');
-const path=require('path');
-const multer = require('multer');
-const Asset = require('../models/obj');
-const Member = require('../models/member');
+const express = require("express");
+const bodyParser = require("body-parser");
+const collection = require("../models/config");
+const Project = require("../models/user");
+const path = require("path");
+const multer = require("multer");
+const Asset = require("../models/obj");
+const Member = require("../models/member");
 const app = express();
 
 app.use(express.static("public"));
@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 app.post("/", async (req, res) => {
   try {
-    const { username,email, password, confirmpassword } = req.body;
+    const { username, email, password, confirmpassword } = req.body;
 
     const existUser = await collection.findOne({ email });
 
@@ -48,11 +48,11 @@ app.post("/", async (req, res) => {
 app.get("/login", (req, res) => {
   res.render("login");
 });
-
 app.post("/login", async (req, res) => {
   try {
     const user = await collection.findOne({ email: req.body.email });
     if (!user) {
+      
       return res.send("Email not found");
     }
     // Check if the password matches the one stored in the database
@@ -70,11 +70,12 @@ app.post("/login", async (req, res) => {
   }
 });
 
-
-app.get('/assign',async (req,res)=>{
+app.get("/assign", async (req, res) => {
   const projects = await Project.find();
-  res.render('assign', { projects})
+  res.render("assign", { projects });
 });
+app.get("/dash", (req, res) => {
+  res.render("home");
 ;
 app.get("/dash/:id", async (req, res) => {
   try {
@@ -114,11 +115,11 @@ app.post("/assign", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-app.get('/members',(req,res)=>{
-  res.render('member');
+app.get("/members", (req, res) => {
+  res.render("member");
 });
 
-app.post('/members', async (req, res) => {
+app.post("/members", async (req, res) => {
   try {
     const { numOfRepetitions } = req.body;
     const savedMembers = [];
@@ -137,35 +138,43 @@ app.post('/members', async (req, res) => {
         memberPosition,
         taskToAssign,
         startDate,
-        endDate
+        endDate,
       });
 
       // Save the member document to the database
       const savedMember = await newMember.save();
       savedMembers.push(savedMember);
-      console.log('Member saved:', savedMember);
+      console.log("Member saved:", savedMember);
     }
 
     // Send a response after all members have been saved
-    res.status(200).json({ message: 'Members saved successfully', members: savedMembers });
+    res
+      .status(200)
+      .json({ message: "Members saved successfully", members: savedMembers });
   } catch (err) {
-    console.error('Error saving member data:', err);
+    console.error("Error saving member data:", err);
     // Send a JSON response with the error message
-    res.status(500).json({ error: 'Failed to save member data to database', details: err.message });
+    res.status(500).json({
+      error: "Failed to save member data to database",
+      details: err.message,
+    });
   }
 });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-      cb(null, 'uploads/');
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
 });
 
 const upload = multer({
-  storage: storage
+  storage: storage,
 });
 app.get("/assets", async (req, res) => {
   try {
@@ -177,19 +186,23 @@ app.get("/assets", async (req, res) => {
   }
 });
 
-app.post('/assets', upload.single('filename'), async (req, res) => {
+app.post("/assets", upload.single("filename"), async (req, res) => {
   try {
-      const { filename, path, size } = req.file;
-      const asset = new Asset({
-          filename,
-          path,
-          size
-      });
-      await asset.save();
-      res.send('Asset uploaded successfully');
+    const { filename, path, size } = req.file;
+    const asset = new Asset({
+      filename,
+      path,
+      size,
+    });
+    await asset.save();
+    res.send("Asset uploaded successfully");
   } catch (error) {
-      res.status(400).send('Error uploading asset');
+    res.status(400).send("Error uploading asset");
   }
+});
+
+app.get("/users", (req, res) => {
+  res.render("users");
 });
 
 const PORT = process.env.PORT || 5000;
