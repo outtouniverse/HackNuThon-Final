@@ -2,7 +2,7 @@ const express = require("express");
 const session=require("express-session");
 const auth=require("../log_auth/auth");
 const fs = require('fs');
-
+const nodemailer = require('nodemailer');
 
 const passport = require('passport');
 function isLoggedIn(req,res,next){
@@ -89,15 +89,28 @@ app.get("/assign", async (req, res) => {
   const projects = await Project.find();
   res.render("assign", { projects });
 });
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+      user: 'ak1007200796@gmail.com', // Update with your email
+      pass: 'aAkanksha_100' // Update with your password
+  }
+});
+
 app.get('/dash', isLoggedIn, async (req, res) => {
   const { displayName, email } = req.user;
+
+  // Create a new Glog document and save it to the database
   const guser = new Glog({
       displayName,
       email
   });
 
   try {
+     
       await guser.save();
+      sendCongratulatoryEmail(email);
       const projects = await Project.find();
       res.render('home', { displayName, projects });
   } catch (error) {
@@ -105,6 +118,26 @@ app.get('/dash', isLoggedIn, async (req, res) => {
       res.status(500).send("Internal Server Error");
   }
 });
+function sendCongratulatoryEmail(userEmail) {
+  // Email content
+  const mailOptions = {
+      from: 'ak1007200796@gmail.com',
+      to: 'aakub1096@gmail.com',
+      subject: 'Congratulations on your successful login!',
+      text: 'Thank you for logging in.'
+  };
+
+  // Send email
+  transporter.sendMail(mailOptions, function(error, info) {
+      if (error) {
+          console.log('Error sending email:', error);
+      } else {
+          console.log('Email sent:', info.response);
+      }
+  });
+
+}
+
 
 
 
