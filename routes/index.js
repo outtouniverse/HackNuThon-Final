@@ -74,9 +74,7 @@ app.get("/assign", async (req, res) => {
   const projects = await Project.find();
   res.render("assign", { projects });
 });
-app.get("/dash", (req, res) => {
-  res.render("home");
-;
+
 app.get("/dash/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -85,7 +83,9 @@ app.get("/dash/:id", async (req, res) => {
       return res.send("User not found");
     }
     const username = user.username; // Assuming the username is stored in the user object
-    res.render("home", { username });
+    const projects = await Project.find();
+    res.render("home", { username,projects});
+    
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).send("Internal Server Error");
@@ -109,48 +109,38 @@ app.post("/assign", async (req, res) => {
     // Save the project to the database
     await project.save();
     const projects = await Project.find();
-    res.redirect("/assign");
+    const id = req.params.id;
+    const user = await collection.findOne(id);
+    res.redirect("/dash/"+user._id);
+   
   } catch (error) {
     console.error("Error saving project:", error);
     res.status(500).send("Internal Server Error");
   }
 });
 app.get("/members", (req, res) => {
-  res.render("member");
+  res.render("members");
 });
-
 app.post("/members", async (req, res) => {
   try {
-    const { numOfRepetitions } = req.body;
-    const savedMembers = [];
+    const memberName = req.body[`project_title`];
+    const memberPosition = req.body[`project_description`];
+    const taskToAssign = req.body[`task_to_assign`];
+    const startDate = req.body[`start_date`];
+    const endDate = req.body[`end_date`];
 
-    // Loop through each member submitted in the form
-    for (let i = 0; i < numOfRepetitions; i++) {
-      const memberName = req.body[`project_title_${i}`];
-      const memberPosition = req.body[`project_description_${i}`];
-      const taskToAssign = req.body[`task_to_assign_${i}`];
-      const startDate = req.body[`start_date_${i}`];
-      const endDate = req.body[`end_date_${i}`];
+    const newMember = new Member({
+      memberName,
+      memberPosition,
+      taskToAssign,
+      startDate,
+      endDate,
+    });
 
-      // Create a new member document
-      const newMember = new Member({
-        memberName,
-        memberPosition,
-        taskToAssign,
-        startDate,
-        endDate,
-      });
-
-      // Save the member document to the database
-      const savedMember = await newMember.save();
-      savedMembers.push(savedMember);
-      console.log("Member saved:", savedMember);
-    }
-
-    // Send a response after all members have been saved
-    res
-      .status(200)
-      .json({ message: "Members saved successfully", members: savedMembers });
+    // Save the member document to the database
+    const savedMember = await newMember.save();
+    savedMembers.push(savedMember);
+    console.log("Member saved:", savedMember);
   } catch (err) {
     console.error("Error saving member data:", err);
     // Send a JSON response with the error message
@@ -160,6 +150,7 @@ app.post("/members", async (req, res) => {
     });
   }
 });
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
