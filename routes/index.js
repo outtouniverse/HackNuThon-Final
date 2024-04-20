@@ -1,4 +1,14 @@
 const express = require("express");
+const session=require("express-session");
+const auth=require("../log_auth/auth");
+const fs = require('fs');
+
+
+const passport = require('passport');
+function isLoggedIn(req,res,next){
+    req.user?next():res.sendStatus(401);
+}
+
 const bodyParser = require("body-parser");
 const collection = require("../models/config");
 const Project = require("../models/user");
@@ -6,7 +16,12 @@ const path = require("path");
 const multer = require("multer");
 const Asset = require("../models/obj");
 const Member = require("../models/member");
+const Glog=require("../models/log_auth");
 const app = express();
+
+app.use(session({secret:'cats'}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.static("public"));
 app.set("view engine", "ejs");
@@ -74,23 +89,25 @@ app.get("/assign", async (req, res) => {
   const projects = await Project.find();
   res.render("assign", { projects });
 });
+app.get('/dash', isLoggedIn, async (req, res) => {
+  const { displayName, email } = req.user;
+  const guser = new Glog({
+      displayName,
+      email
+  });
 
-app.get("/dash/:id", async (req, res) => {
   try {
-    const id = req.params.id;
-    const user = await collection.findById(id);
-    if (!user) {
-      return res.send("User not found");
-    }
-    const username = user.username; // Assuming the username is stored in the user object
-    const projects = await Project.find();
-    res.render("home", { username,projects});
-    
+      await guser.save();
+      const projects = await Project.find();
+      res.render('home', { displayName, projects });
   } catch (error) {
-    console.error("Error fetching user:", error);
-    res.status(500).send("Internal Server Error");
+      console.error("Error in /dash route:", error);
+      res.status(500).send("Internal Server Error");
   }
 });
+
+
+
 app.get("/assign", async (req, res) => {
   const projects = await Project.find();
   res.render("assign", { projects });
@@ -118,6 +135,8 @@ app.post("/assign", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+
 app.get("/members", (req, res) => {
   res.render("members");
 });
@@ -167,6 +186,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
 });
+
 app.get("/assets", async (req, res) => {
   try {
     const assets = await Asset.find(); // Corrected from 'asset' to 'Asset'
@@ -198,6 +218,19 @@ app.get("/users", (req, res) => {
 
 app.get("/auth", (req, res) => {
   res.render("googleAuth");
+});
+app.get('/auth/google',
+    passport.authenticate('google',{scope:['email','profile']})
+);
+app.get('/google/callback',passport.authenticate('google',{
+  successRedirect:'/dash',
+  failureRedirect:'/auth/fail',
+  }));
+
+app.get('/logout', function(req, res){
+  req.logout(function(){
+    res.redirect('/auth');
+  });
 });
 
 const PORT = process.env.PORT || 5000;

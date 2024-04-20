@@ -69,7 +69,7 @@
           </li>
 
           <li>
-            <a href="#">
+            <a href="/logout">
               <span class="icon">
                 <ion-icon name="settings-outline"></ion-icon>
               </span>
@@ -169,7 +169,7 @@
                   Profile
                 </a>
                 <a
-                  href="#"
+                  href="/logout"
                   class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                   title="Logout"
                 >
@@ -187,7 +187,7 @@
                       d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                     />
                   </svg>
-                  Logout
+                  <a href='/logout'>Logout</a>
                 </a>
               </div>
             </div>
@@ -198,7 +198,7 @@
           class="container p-4 py-20 flex flex-col items-center justify-center w-full"
         >
           <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-            Welcome <span class="text-blue-600"><%=username%></span>
+            Welcome <span class="text-blue-600"><%= displayName %></span>
           </h1>
           <div class="flex gap-4">
             <a
