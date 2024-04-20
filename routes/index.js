@@ -190,6 +190,10 @@ app.get("/users", (req, res) => {
   res.render("users");
 });
 
+app.get("/auth", (req, res) => {
+  res.render("googleAuth");
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
