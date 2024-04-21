@@ -9,6 +9,7 @@ function isLoggedIn(req,res,next){
     req.user?next():res.sendStatus(401);
 }
 
+
 const bodyParser = require("body-parser");
 const collection = require("../models/config");
 const Project = require("../models/user");
@@ -16,9 +17,14 @@ const path = require("path");
 const multer = require("multer");
 const Asset = require("../models/obj");
 const Member = require("../models/member");
+const Glog=require("../models/log_auth");
 const app = express();
 
 app.use(express.static("public"));
+
+app.use(session({secret:'cats'}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -87,12 +93,12 @@ app.get("/assign", async (req, res) => {
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-      user: 'ak1007200796@gmail.com', // Update with your email
-      pass: 'aAkanksha_100' // Update with your password
+      user: 'hacknuthon@gmail.com', 
+      pass: 'ubpw roui efwm ljek' 
   }
 });
 
-app.get('/dash', isLoggedIn, async (req, res) => {
+app.get('/home', isLoggedIn, async (req, res) => {
   const { displayName, email } = req.user;
 
   // Create a new Glog document and save it to the database
@@ -132,9 +138,6 @@ function sendCongratulatoryEmail(userEmail) {
 
 }
 
-
-
-
 app.get("/assign", async (req, res) => {
   const projects = await Project.find();
   res.render("assign", { projects });
@@ -159,7 +162,7 @@ app.post("/assign", async (req, res) => {
       res.status(500).send("Internal Server Error");
     }
   });
-  app.get("/members", (req, res) => {
+app.get("/members", (req, res) => {
     res.render("member");
   });
 
@@ -245,16 +248,31 @@ app.post("/assign", async (req, res) => {
     }
   });
 
-  app.get("/users", (req, res) => {
+app.get("/users", (req, res) => {
     res.render("users");
   });
 
-  app.get("/auth", (req, res) => {
+app.get("/auth", (req, res) => {
     res.render("googleAuth");
   });
+app.get('/auth/google',
+  passport.authenticate('google',{scope:['email','profile']})
+);
+app.get('/google/callback',passport.authenticate('google',{
+successRedirect:'/home',
+failureRedirect:'/auth/fail',
+}));
+app.get('/auth/fail',(req,res)=>{
+  res.send('SOmething went wrong');
+});
 
+
+app.get('/logout',(req,res)=>{
+    req.logOut();
+    req.session.destroy();
+    res.send('Goodbye');
+});
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
   module.export = app;
-});
