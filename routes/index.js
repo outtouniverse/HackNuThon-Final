@@ -94,14 +94,12 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
       user: 'hacknuthon@gmail.com', 
-      pass: 'ubpw roui efwm ljek' 
+      pass: 'ymmr skfn fozs uaki' 
   }
 });
 
 app.get('/home', isLoggedIn, async (req, res) => {
-  const { displayName, email } = req.user;
-
-  // Create a new Glog document and save it to the database
+  const {  displayName, email } = req.user; 
   const guser = new Glog({
       displayName,
       email
@@ -112,17 +110,18 @@ app.get('/home', isLoggedIn, async (req, res) => {
       await guser.save();
       sendCongratulatoryEmail(email);
       const projects = await Project.find();
-      res.render('home', { displayName, projects });
+      res.render('home', {displayName, projects }); // Passing the user's ID to the view
   } catch (error) {
       console.error("Error in /dash route:", error);
       res.status(500).send("Internal Server Error");
   }
 });
+
 function sendCongratulatoryEmail(userEmail) {
   // Email content
   const mailOptions = {
-      from: 'ak1007200796@gmail.com',
-      to: 'aakub1096@gmail.com',
+      from: 'hacknuthon@gmail.com',
+      to: userEmail,
       subject: 'Congratulations on your successful login!',
       text: 'Thank you for logging in.'
   };
@@ -248,9 +247,7 @@ app.get("/members", (req, res) => {
     }
   });
 
-app.get("/users", (req, res) => {
-    res.render("users");
-  });
+
 
 app.get("/auth", (req, res) => {
     res.render("googleAuth");
